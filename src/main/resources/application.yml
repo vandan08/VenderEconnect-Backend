@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/vendrconnect
+  application:
+    name: vendrconnect-backend
+
+server:
+  port: 8080
+
+jwt:
+  secret: VendrConnectSecretKey2024!@#$%^&*()
+  expiration: 86400000
+
+logging:
+  level:
+    com.vendrconnect: DEBUG
