@@ -5,6 +5,8 @@ import com.vendrconnect.model.User;
 import com.vendrconnect.model.Vendor;
 import com.vendrconnect.repository.UserRepository;
 import com.vendrconnect.repository.VendorRepository;
+import com.vendrconnect.repository.AdminRepository;
+import com.vendrconnect.model.Admin;
 import com.vendrconnect.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,9 @@ public class AuthService {
     
     @Autowired
     private VendorRepository vendorRepository;
+    
+    @Autowired
+    private AdminRepository adminRepository;
     
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -76,5 +81,81 @@ public class AuthService {
         }
         
         throw new RuntimeException("Invalid credentials");
+    }
+    
+    public AuthResponse loginAdmin(LoginRequest request) {
+        Admin admin = adminRepository.findByEmail(request.getEmail())
+                .orElse(null);
+        
+        if (admin != null && passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
+            String token = jwtUtils.generateJwtToken(admin.getId(), admin.getEmail(), "ADMIN");
+            return new AuthResponse(token, admin.getId(), admin.getName(), admin.getEmail(), "ADMIN");
+        }
+        
+        throw new RuntimeException("Invalid credentials");
+    }
+    
+    public String getUserIdFromToken(String token) {
+        return jwtUtils.getUserIdFromJwtToken(token);
+    }
+    
+    public String getUserTypeFromToken(String token) {
+        return jwtUtils.getRoleFromJwtToken(token);
+    }
+    
+    public User getUserById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+    
+    public Vendor getVendorById(String vendorId) {
+        return vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new RuntimeException("Vendor not found"));
+    }
+    
+    public User updateUserProfile(String userId, User updatedUser) {
+        User user = getUserById(userId);
+        user.setName(updatedUser.getName());
+        user.setLocation(updatedUser.getLocation());
+        return userRepository.save(user);
+    }
+    
+    public Vendor updateVendorProfile(String vendorId, Vendor updatedVendor) {
+        Vendor vendor = getVendorById(vendorId);
+        vendor.setName(updatedVendor.getName());
+        vendor.setLocation(updatedVendor.getLocation());
+        vendor.setServiceCategory(updatedVendor.getServiceCategory());
+        return vendorRepository.save(vendor);
+    }
+    
+    public void updateProfileImage(String userId, String userType, String imageUrl) {
+        if ("USER".equals(userType)) {
+            User user = getUserById(userId);
+            user.setProfileImage(imageUrl);
+            userRepository.save(user);
+        } else if ("VENDOR".equals(userType)) {
+            Vendor vendor = getVendorById(userId);
+            vendor.setProfileImage(imageUrl);
+            vendorRepository.save(vendor);
+        }
+    }
+    
+    public boolean changePassword(String userId, String userType, String oldPassword, String newPassword) {
+        if ("USER".equals(userType)) {
+            User user = getUserById(userId);
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+                return true;
+            }
+        } else if ("VENDOR".equals(userType)) {
+            Vendor vendor = getVendorById(userId);
+            if (passwordEncoder.matches(oldPassword, vendor.getPassword())) {
+                vendor.setPassword(passwordEncoder.encode(newPassword));
+                vendorRepository.save(vendor);
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -7,6 +7,11 @@ spring:
       # uri: mongodb://localhost:27017/vendrconnect
   application:
     name: vendrconnect-backend
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+      enabled: true
 
 # Embedded MongoDB (comment this section to use external MongoDB)
 de:

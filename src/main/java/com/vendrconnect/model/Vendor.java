@@ -22,6 +22,7 @@ public class Vendor {
     private List<TeamMember> teamMembers = new ArrayList<>();
     private String availabilityStatus = "offline";
     private String location;
+    private String profileImage;
 
     public Vendor() {}
 
@@ -57,4 +58,7 @@ public class Vendor {
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
+
+    public String getProfileImage() { return profileImage; }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 }

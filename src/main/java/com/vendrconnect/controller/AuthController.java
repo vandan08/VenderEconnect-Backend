@@ -54,4 +54,14 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
     }
+    
+    @PostMapping("/login/admin")
+    public ResponseEntity<AuthResponse> loginAdmin(@Valid @RequestBody LoginRequest request) {
+        try {
+            AuthResponse response = authService.loginAdmin(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

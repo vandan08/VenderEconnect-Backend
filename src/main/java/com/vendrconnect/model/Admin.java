@@ -4,11 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Document(collection = "users")
-public class User {
+@Document(collection = "admins")
+public class Admin {
     @Id
     private String id;
     
@@ -18,20 +15,15 @@ public class User {
     private String email;
     
     private String password;
-    private String location;
-    private String profileImage;
-    private List<String> jobsPosted = new ArrayList<>();
 
-    public User() {}
+    public Admin() {}
 
-    public User(String name, String email, String password, String location) {
+    public Admin(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.location = location;
     }
 
-    // Getters and Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -43,13 +35,4 @@ public class User {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-
-    public String getProfileImage() { return profileImage; }
-    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
-
-    public List<String> getJobsPosted() { return jobsPosted; }
-    public void setJobsPosted(List<String> jobsPosted) { this.jobsPosted = jobsPosted; }
 }
