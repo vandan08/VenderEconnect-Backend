@@ -1,12 +1,22 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/vendrconnect
+      # For embedded MongoDB (current setup)
+      database: vendrconnect
+      # For external MongoDB (uncomment below, comment embedded section)
+      # uri: mongodb://localhost:27017/vendrconnect
   application:
     name: vendrconnect-backend
 
+# Embedded MongoDB (comment this section to use external MongoDB)
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 6.0.6
+
 server:
-  port: 8080
+  port: 8083
 
 jwt:
   secret: VendrConnectSecretKey2024!@#$%^&*()
