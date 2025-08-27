@@ -2,6 +2,7 @@ package com.vendrconnect.controller;
 
 import com.vendrconnect.dto.*;
 import com.vendrconnect.service.AuthService;
+import com.vendrconnect.service.GoogleAuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,9 @@ public class AuthController {
     
     @Autowired
     private AuthService authService;
+    
+    @Autowired
+    private GoogleAuthService googleAuthService;
     
     @PostMapping("/register/user")
     public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody UserRegistrationRequest request) {
@@ -61,6 +65,16 @@ public class AuthController {
             AuthResponse response = authService.loginAdmin(request);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
+    @PostMapping("/google")
+    public ResponseEntity<AuthResponse> googleAuth(@RequestBody GoogleAuthRequest request) {
+        try {
+            AuthResponse response = googleAuthService.authenticateWithGoogle(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }

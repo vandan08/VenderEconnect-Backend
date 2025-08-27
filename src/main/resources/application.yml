@@ -30,3 +30,9 @@ jwt:
 logging:
   level:
     com.vendrconnect: DEBUG
+
+# Google OAuth Configuration
+google:
+  oauth:
+    client-id: 968790597541-a4ukmkd56rjan720jqnhn8r32tgup6ru.apps.googleusercontent.com
+    client-secret: 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

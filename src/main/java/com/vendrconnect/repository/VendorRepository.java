@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface VendorRepository extends MongoRepository<Vendor, String> {
     Optional<Vendor> findByEmail(String email);
     boolean existsByEmail(String email);
-    List<Vendor> findByServiceCategoryAndLocation(String serviceCategory, String location);
-    List<Vendor> findByServiceCategory(String serviceCategory);
+    List<Vendor> findByServiceCategoriesContainingAndLocation(String serviceCategory, String location);
+    List<Vendor> findByServiceCategoriesContaining(String serviceCategory);
 }
