@@ -13,12 +13,17 @@ spring:
       max-request-size: 5MB
       enabled: true
 
-# Embedded MongoDB (comment this section to use external MongoDB)
+# Embedded MongoDB with persistent storage
 de:
   flapdoodle:
     mongodb:
       embedded:
         version: 6.0.6
+        storage:
+          database-dir: ./data/mongodb
+          reuse-existing: true
+        download:
+          path: ./data/mongodb-binaries
 
 server:
   port: 8083

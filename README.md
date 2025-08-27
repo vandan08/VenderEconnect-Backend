@@ -1,197 +1,233 @@
-# VendrConnect Backend
+# OneMe Backend
 
-A Spring Boot backend service for the VendrConnect marketplace application.
+**"Everything You Need, All in One Place"**
 
-## Technologies Used
+OneMe is a comprehensive service marketplace backend that connects users with vendors for various services. Built with Spring Boot and MongoDB, it provides secure authentication, job management, and profile handling.
 
-- Java 17
-- Spring Boot 3.2.0
-- Spring Security
-- Spring Data MongoDB
-- JWT Authentication
-- Maven
+## 🚀 Features
 
-## Prerequisites
+- **Multi-Role Authentication**: Users, Vendors, and Admins with JWT security
+- **Google OAuth Integration**: Seamless login with Google accounts
+- **Job Management**: Create, manage, and track service requests
+- **Profile Management**: User profiles with image upload support
+- **Multi-Category Services**: Vendors can offer multiple service categories
+- **Budget Range System**: Dynamic budget ranges for jobs
+- **File Upload**: Secure profile image handling
+- **Admin Dashboard**: Complete user and vendor management
+- **Persistent Data**: MongoDB with persistent storage
+
+## 🛠 Technology Stack
+
+- **Framework**: Spring Boot 3.x
+- **Database**: MongoDB (Embedded with persistent storage)
+- **Security**: Spring Security + JWT
+- **Authentication**: Google OAuth 2.0
+- **File Storage**: Local file system
+- **Build Tool**: Maven
+- **Java Version**: 17+
+
+## 📋 Prerequisites
 
 - Java 17 or higher
 - Maven 3.6+
-- MongoDB 4.4+
+- Google Cloud Console account (for OAuth)
 
-## Setup Instructions
+## ⚙️ Configuration
 
-### 1. Install MongoDB
+### 1. Google OAuth Setup
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create OAuth 2.0 credentials
+3. Add authorized origins: `http://localhost:5173`
+4. Update `application.yml`:
 
-Download and install MongoDB from [https://www.mongodb.com/try/download/community](https://www.mongodb.com/try/download/community)
-
-Start MongoDB service:
-```bash
-# Windows
-net start MongoDB
-
-# macOS/Linux
-sudo systemctl start mongod
+```yaml
+google:
+  oauth:
+    client-id: 968790597541-a4ukmkd56rjan720jqnhn8r32tgup6ru.apps.googleusercontent.com
+    client-secret: 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
 ```
 
-### 2. Clone and Setup
+### 2. Application Configuration
+```yaml
+server:
+  port: 8083
 
+spring:
+  data:
+    mongodb:
+      database: oneme
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+jwt:
+  secret: OneMe-SecretKey-2024
+  expiration: 86400000
+```
+
+## 🚀 Getting Started
+
+### 1. Clone and Setup
 ```bash
-cd backend
+git clone <repository-url>
+cd VenderEconnect-Backend
+```
+
+### 2. Configure Google OAuth
+- Replace placeholder values in `application.yml`
+- Set your Google Client ID and Secret
+
+### 3. Run the Application
+```bash
 mvn clean install
-```
-
-### 3. Configuration
-
-The application uses the following default configuration in `application.yml`:
-
-- **Server Port**: 8080
-- **MongoDB URI**: mongodb://localhost:27017/vendrconnect
-- **JWT Secret**: VendrConnectSecretKey2024!@#$%^&*()
-- **JWT Expiration**: 24 hours
-
-### 4. Run the Application
-
-```bash
 mvn spring-boot:run
 ```
 
-The application will start on `http://localhost:8080`
+The backend will start on `http://localhost:8083`
 
-## API Endpoints
+## 📚 API Endpoints
 
 ### Authentication
-
-- `POST /api/auth/register/user` - Register a new user
-- `POST /api/auth/register/vendor` - Register a new vendor
+- `POST /api/auth/register/user` - User registration
+- `POST /api/auth/register/vendor` - Vendor registration
 - `POST /api/auth/login/user` - User login
 - `POST /api/auth/login/vendor` - Vendor login
+- `POST /api/auth/login/admin` - Admin login
+- `POST /api/auth/google` - Google OAuth authentication
 
-### Jobs (Protected Routes)
-
-- `POST /api/jobs` - Create a new job (User only)
-- `GET /api/jobs/user` - Get user's posted jobs
-- `GET /api/jobs/vendor` - Get vendor's assigned jobs
-- `GET /api/jobs/available` - Get available jobs for vendor
-- `POST /api/jobs/{jobId}/accept` - Accept a job (Vendor only)
+### Job Management
+- `GET /api/jobs/user` - Get user's jobs
+- `POST /api/jobs` - Create new job
+- `GET /api/jobs/vendor` - Get vendor's jobs
+- `GET /api/jobs/available` - Get available jobs for vendors
+- `POST /api/jobs/{jobId}/accept` - Accept job (vendor)
 - `PUT /api/jobs/{jobId}/status` - Update job status
-- `GET /api/jobs/{jobId}` - Get job details
 
-### Vendor Management (Protected Routes)
+### Profile Management
+- `GET /api/profile/user` - Get user profile
+- `GET /api/profile/vendor` - Get vendor profile
+- `PUT /api/profile/user` - Update user profile
+- `PUT /api/profile/vendor` - Update vendor profile
+- `POST /api/profile/change-password` - Change password
 
-- `GET /api/vendor/profile` - Get vendor profile
-- `PUT /api/vendor/availability` - Update availability status
-- `POST /api/vendor/team` - Add team member
-- `DELETE /api/vendor/team/{memberName}` - Remove team member
-- `PUT /api/vendor/team/{memberName}` - Update team member
+### File Upload
+- `POST /api/files/upload-profile-image` - Upload profile image
 
-## Request/Response Examples
+### Admin
+- `GET /api/admin/users` - Get all users
+- `GET /api/admin/vendors` - Get all vendors
+- `DELETE /api/admin/users/{userId}` - Delete user
+- `DELETE /api/admin/vendors/{vendorId}` - Delete vendor
 
-### User Registration
-```json
-POST /api/auth/register/user
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123",
-  "location": "New York"
-}
-```
+## 🗄️ Database Schema
 
-### Vendor Registration
-```json
-POST /api/auth/register/vendor
-{
-  "name": "ABC Plumbing",
-  "email": "abc@plumbing.com",
-  "password": "password123",
-  "serviceCategory": "plumber",
-  "location": "New York"
-}
-```
+### Users
+- Personal information and authentication
+- Job posting history
+- Profile image support
 
-### Create Job
-```json
-POST /api/jobs
-Authorization: Bearer <token>
-{
-  "jobTitle": "Fix Kitchen Sink",
-  "description": "Kitchen sink is leaking",
-  "location": "New York",
-  "serviceCategory": "plumber"
-}
-```
+### Vendors
+- Business information
+- Multiple service categories
+- Team member management
+- Availability status
 
-### Update Availability
-```json
-PUT /api/vendor/availability
-Authorization: Bearer <token>
-{
-  "status": "online"
-}
-```
+### Jobs
+- Service requests with budget ranges
+- Status tracking
+- Category-based filtering
 
-## Database Schema
+### Admins
+- System administration accounts
+- Default admin: `admin@oneme.com` / `admin123`
 
-### Users Collection
-- `_id`: ObjectId
-- `name`: String
-- `email`: String (unique)
-- `password`: String (hashed)
-- `location`: String
-- `jobsPosted`: Array of job IDs
-
-### Vendors Collection
-- `_id`: ObjectId
-- `name`: String
-- `email`: String (unique)
-- `password`: String (hashed)
-- `serviceCategory`: String
-- `teamMembers`: Array of embedded documents
-- `availabilityStatus`: String (online/busy/offline)
-- `location`: String
-
-### Jobs Collection
-- `_id`: ObjectId
-- `jobTitle`: String
-- `description`: String
-- `location`: String
-- `postedBy`: User ID
-- `status`: String (pending/accepted/in_progress/completed)
-- `assignedVendor`: Vendor ID
-- `assignedTeamMember`: String
-- `createdAt`: DateTime
-- `serviceCategory`: String
-
-## Security
+## 🔒 Security Features
 
 - JWT-based authentication
-- Password encryption using BCrypt
-- CORS enabled for frontend integration
-- Role-based access control (USER/VENDOR)
+- BCrypt password encryption
+- Google OAuth integration
+- Role-based access control
+- File upload validation
+- CORS configuration
 
-## Development
+## 📁 Project Structure
 
-To run in development mode with auto-reload:
+```
+src/main/java/com/vendrconnect/
+├── config/          # Configuration classes
+├── controller/      # REST controllers
+├── dto/            # Data transfer objects
+├── model/          # Entity models
+├── repository/     # Data repositories
+├── security/       # Security configuration
+├── service/        # Business logic
+└── util/           # Utility classes
 
-```bash
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+data/
+├── mongodb/        # Persistent database files
+└── mongodb-binaries/ # MongoDB binaries cache
+
+uploads/
+└── profile-images/ # User profile images
 ```
 
-## Testing
+## 🧪 Testing
 
-Run tests:
 ```bash
+# Run tests
 mvn test
+
+# Run with coverage
+mvn test jacoco:report
 ```
 
-## Production Deployment
+## 📦 Building for Production
 
-1. Update `application.yml` with production MongoDB URI
-2. Change JWT secret to a secure random string
-3. Build the application:
-   ```bash
-   mvn clean package
-   ```
-4. Run the JAR file:
-   ```bash
-   java -jar target/vendrconnect-backend-1.0.0.jar
-   ```
+```bash
+# Create production build
+mvn clean package -Pprod
+
+# Run production jar
+java -jar target/vendrconnect-backend-1.0.0.jar
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **Port Conflicts**: Backend runs on port 8083
+2. **MongoDB Issues**: Uses embedded MongoDB with persistent storage
+3. **Google OAuth**: Ensure correct client ID and origins
+4. **File Uploads**: Check directory permissions for `uploads/`
+
+### Logs
+```bash
+# View application logs
+tail -f logs/application.log
+
+# Debug mode
+mvn spring-boot:run -Dspring-boot.run.arguments=--logging.level.com.vendrconnect=DEBUG
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 📞 Support
+
+For support and questions:
+- Create an issue in the repository
+- Contact the development team
+
+---
+
+**OneMe Backend** - Powering the unified service marketplace platform.
