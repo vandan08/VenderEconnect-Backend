@@ -2,6 +2,7 @@ package com.vendrconnect.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.util.List;
 
 public class VendorRegistrationRequest {
     @NotBlank
@@ -14,8 +15,7 @@ public class VendorRegistrationRequest {
     @NotBlank
     private String password;
     
-    @NotBlank
-    private String serviceCategory;
+    private List<String> serviceCategories;
     
     @NotBlank
     private String location;
@@ -29,8 +29,8 @@ public class VendorRegistrationRequest {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getServiceCategory() { return serviceCategory; }
-    public void setServiceCategory(String serviceCategory) { this.serviceCategory = serviceCategory; }
+    public List<String> getServiceCategories() { return serviceCategories; }
+    public void setServiceCategories(List<String> serviceCategories) { this.serviceCategories = serviceCategories; }
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }

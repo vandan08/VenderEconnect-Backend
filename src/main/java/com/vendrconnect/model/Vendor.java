@@ -18,7 +18,7 @@ public class Vendor {
     private String email;
     
     private String password;
-    private String serviceCategory;
+    private List<String> serviceCategories = new ArrayList<>();
     private List<TeamMember> teamMembers = new ArrayList<>();
     private String availabilityStatus = "offline";
     private String location;
@@ -26,11 +26,11 @@ public class Vendor {
 
     public Vendor() {}
 
-    public Vendor(String name, String email, String password, String serviceCategory, String location) {
+    public Vendor(String name, String email, String password, List<String> serviceCategories, String location) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.serviceCategory = serviceCategory;
+        this.serviceCategories = serviceCategories;
         this.location = location;
     }
 
@@ -47,8 +47,8 @@ public class Vendor {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getServiceCategory() { return serviceCategory; }
-    public void setServiceCategory(String serviceCategory) { this.serviceCategory = serviceCategory; }
+    public List<String> getServiceCategories() { return serviceCategories; }
+    public void setServiceCategories(List<String> serviceCategories) { this.serviceCategories = serviceCategories; }
 
     public List<TeamMember> getTeamMembers() { return teamMembers; }
     public void setTeamMembers(List<TeamMember> teamMembers) { this.teamMembers = teamMembers; }

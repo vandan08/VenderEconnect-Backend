@@ -22,6 +22,12 @@ public class JobService {
     public Job createJob(JobRequest request, String userId) {
         Job job = new Job(request.getJobTitle(), request.getDescription(), 
                          request.getLocation(), userId, request.getServiceCategory());
+        if (request.getBudgetMin() != null) {
+            job.setBudgetMin(request.getBudgetMin());
+        }
+        if (request.getBudgetMax() != null) {
+            job.setBudgetMax(request.getBudgetMax());
+        }
         job = jobRepository.save(job);
         
         // Add job to user's posted jobs list

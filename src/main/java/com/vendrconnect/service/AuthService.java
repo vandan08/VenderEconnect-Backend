@@ -52,7 +52,7 @@ public class AuthService {
         
         Vendor vendor = new Vendor(request.getName(), request.getEmail(), 
                                  passwordEncoder.encode(request.getPassword()), 
-                                 request.getServiceCategory(), request.getLocation());
+                                 request.getServiceCategories(), request.getLocation());
         vendor = vendorRepository.save(vendor);
         
         String token = jwtUtils.generateJwtToken(vendor.getId(), vendor.getEmail(), "VENDOR");
@@ -124,7 +124,7 @@ public class AuthService {
         Vendor vendor = getVendorById(vendorId);
         vendor.setName(updatedVendor.getName());
         vendor.setLocation(updatedVendor.getLocation());
-        vendor.setServiceCategory(updatedVendor.getServiceCategory());
+        vendor.setServiceCategories(updatedVendor.getServiceCategories());
         return vendorRepository.save(vendor);
     }
     
