@@ -69,4 +69,10 @@ public class JobController {
         Job job = jobService.getJobById(jobId);
         return ResponseEntity.ok(job);
     }
+    
+    @GetMapping("/all")
+    public ResponseEntity<List<Job>> getAllJobs() {
+        List<Job> jobs = jobService.getAllJobs();
+        return ResponseEntity.ok(jobs);
+    }
 }

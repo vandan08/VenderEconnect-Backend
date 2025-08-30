@@ -55,19 +55,26 @@ public class JobService {
     }
     
     public Job acceptJob(String jobId, String vendorId) {
-        Job job = jobRepository.findById(jobId).orElseThrow();
-        job.setStatus("accepted");
+        Job job = jobRepository.findById(jobId)
+            .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
+        job.setStatus("in_progress");
         job.setAssignedVendor(vendorId);
         return jobRepository.save(job);
     }
     
     public Job updateJobStatus(String jobId, String status) {
-        Job job = jobRepository.findById(jobId).orElseThrow();
+        Job job = jobRepository.findById(jobId)
+            .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
         job.setStatus(status);
         return jobRepository.save(job);
     }
     
     public Job getJobById(String jobId) {
-        return jobRepository.findById(jobId).orElseThrow();
+        return jobRepository.findById(jobId)
+            .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
+    }
+    
+    public List<Job> getAllJobs() {
+        return jobRepository.findAll();
     }
 }
