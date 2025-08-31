@@ -70,8 +70,8 @@ public class GoogleAuthService {
             user = userRepository.save(user);
         }
 
-        String token = jwtUtils.generateJwtToken(user.getId(), user.getEmail(), "USER");
-        return new AuthResponse(token, user.getId(), user.getName(), user.getEmail(), "USER");
+        String token = jwtUtils.generateJwtToken(user.getId().toString(), user.getEmail(), "USER");
+        return new AuthResponse(token, user.getId().toString(), user.getName(), user.getEmail(), "USER");
     }
 
     private AuthResponse handleVendorAuth(String email, String name, String[] serviceCategories) {
@@ -92,7 +92,7 @@ public class GoogleAuthService {
             vendor = vendorRepository.save(vendor);
         }
 
-        String token = jwtUtils.generateJwtToken(vendor.getId(), vendor.getEmail(), "VENDOR");
-        return new AuthResponse(token, vendor.getId(), vendor.getName(), vendor.getEmail(), "VENDOR");
+        String token = jwtUtils.generateJwtToken(vendor.getId().toString(), vendor.getEmail(), "VENDOR");
+        return new AuthResponse(token, vendor.getId().toString(), vendor.getName(), vendor.getEmail(), "VENDOR");
     }
 }

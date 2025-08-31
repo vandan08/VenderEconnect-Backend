@@ -1,25 +1,36 @@
 package com.vendrconnect.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.index.Indexed;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Document(collection = "users")
+@Entity
+@Table(name = "users")
 public class User {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
+    @NotBlank
     private String name;
     
-    @Indexed(unique = true)
+    @Email
+    @NotBlank
+    @Column(unique = true)
     private String email;
     
+    @NotBlank
     private String password;
+    
     private String location;
     private String profileImage;
+    
+    @ElementCollection
+    @CollectionTable(name = "user_jobs", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "job_id")
     private List<String> jobsPosted = new ArrayList<>();
 
     public User() {}
@@ -32,8 +43,8 @@ public class User {
     }
 
     // Getters and Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

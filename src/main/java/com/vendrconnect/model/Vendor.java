@@ -1,42 +1,63 @@
 package com.vendrconnect.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.index.Indexed;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Document(collection = "vendors")
+@Entity
+@Table(name = "vendors")
 public class Vendor {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
+    @NotBlank
     private String name;
     
-    @Indexed(unique = true)
+    @Email
+    @NotBlank
+    @Column(unique = true)
     private String email;
     
+    @NotBlank
     private String password;
-    private List<String> serviceCategories = new ArrayList<>();
-    private List<TeamMember> teamMembers = new ArrayList<>();
-    private String availabilityStatus = "offline";
+    
     private String location;
     private String profileImage;
+    
+    @ElementCollection
+    @CollectionTable(name = "vendor_service_categories", joinColumns = @JoinColumn(name = "vendor_id"))
+    @Column(name = "service_category")
+    private List<String> serviceCategories = new ArrayList<>();
+    
+    @ElementCollection
+    @CollectionTable(name = "vendor_team_members", joinColumns = @JoinColumn(name = "vendor_id"))
+    @Column(name = "team_member")
+    private List<String> teamMembers = new ArrayList<>();
+    
+    @ElementCollection
+    @CollectionTable(name = "vendor_jobs", joinColumns = @JoinColumn(name = "vendor_id"))
+    @Column(name = "job_id")
+    private List<String> jobsAccepted = new ArrayList<>();
+    
+    private boolean isAvailable = true;
 
     public Vendor() {}
 
-    public Vendor(String name, String email, String password, List<String> serviceCategories, String location) {
+    public Vendor(String name, String email, String password, String location, List<String> serviceCategories) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.serviceCategories = serviceCategories;
         this.location = location;
+        this.serviceCategories = serviceCategories;
     }
 
     // Getters and Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -47,18 +68,21 @@ public class Vendor {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public List<String> getServiceCategories() { return serviceCategories; }
-    public void setServiceCategories(List<String> serviceCategories) { this.serviceCategories = serviceCategories; }
-
-    public List<TeamMember> getTeamMembers() { return teamMembers; }
-    public void setTeamMembers(List<TeamMember> teamMembers) { this.teamMembers = teamMembers; }
-
-    public String getAvailabilityStatus() { return availabilityStatus; }
-    public void setAvailabilityStatus(String availabilityStatus) { this.availabilityStatus = availabilityStatus; }
-
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
     public String getProfileImage() { return profileImage; }
     public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
+
+    public List<String> getServiceCategories() { return serviceCategories; }
+    public void setServiceCategories(List<String> serviceCategories) { this.serviceCategories = serviceCategories; }
+
+    public List<String> getTeamMembers() { return teamMembers; }
+    public void setTeamMembers(List<String> teamMembers) { this.teamMembers = teamMembers; }
+
+    public List<String> getJobsAccepted() { return jobsAccepted; }
+    public void setJobsAccepted(List<String> jobsAccepted) { this.jobsAccepted = jobsAccepted; }
+
+    public boolean isAvailable() { return isAvailable; }
+    public void setAvailable(boolean available) { isAvailable = available; }
 }

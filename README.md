@@ -19,7 +19,7 @@ OneMe is a comprehensive service marketplace backend that connects users with ve
 ## 🛠 Technology Stack
 
 - **Framework**: Spring Boot 3.x
-- **Database**: MongoDB (Embedded with persistent storage)
+- **Database**: MySQL with Hibernate ORM
 - **Security**: Spring Security + JWT
 - **Authentication**: Google OAuth 2.0
 - **File Storage**: Local file system
@@ -30,6 +30,7 @@ OneMe is a comprehensive service marketplace backend that connects users with ve
 
 - Java 17 or higher
 - Maven 3.6+
+- MySQL 8.0 or higher
 - Google Cloud Console account (for OAuth)
 
 ## ⚙️ Configuration
@@ -47,15 +48,29 @@ google:
     client-secret: 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
 ```
 
-### 2. Application Configuration
+### 2. Database Setup
+```sql
+CREATE DATABASE vendor_connect;
+```
+
+### 3. Application Configuration
 ```yaml
 server:
   port: 8083
 
 spring:
-  data:
-    mongodb:
-      database: oneme
+  datasource:
+    url: jdbc:mysql://localhost:3306/vendor_connect
+    username: root
+    password: your_mysql_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
   servlet:
     multipart:
       max-file-size: 5MB
@@ -74,11 +89,19 @@ git clone <repository-url>
 cd VenderEconnect-Backend
 ```
 
-### 2. Configure Google OAuth
-- Replace placeholder values in `application.yml`
+### 2. Database Setup
+```bash
+# Install MySQL and create database
+mysql -u root -p
+CREATE DATABASE vendor_connect;
+EXIT;
+```
+
+### 3. Configure Application
+- Update MySQL credentials in `application.yml`
 - Set your Google Client ID and Secret
 
-### 3. Run the Application
+### 4. Run the Application
 ```bash
 mvn clean install
 mvn spring-boot:run
@@ -122,25 +145,54 @@ The backend will start on `http://localhost:8083`
 
 ## 🗄️ Database Schema
 
-### Users
-- Personal information and authentication
-- Job posting history
-- Profile image support
+### MySQL Tables
 
-### Vendors
-- Business information
-- Multiple service categories
-- Team member management
-- Availability status
+#### users
+- `id` (BIGINT, AUTO_INCREMENT, PRIMARY KEY)
+- `name` (VARCHAR, NOT NULL)
+- `email` (VARCHAR, UNIQUE, NOT NULL)
+- `password` (VARCHAR, NOT NULL)
+- `location` (VARCHAR)
+- `profile_image` (VARCHAR)
 
-### Jobs
-- Service requests with budget ranges
-- Status tracking
-- Category-based filtering
+#### vendors
+- `id` (BIGINT, AUTO_INCREMENT, PRIMARY KEY)
+- `name` (VARCHAR, NOT NULL)
+- `email` (VARCHAR, UNIQUE, NOT NULL)
+- `password` (VARCHAR, NOT NULL)
+- `location` (VARCHAR)
+- `profile_image` (VARCHAR)
+- `is_available` (BOOLEAN, DEFAULT TRUE)
 
-### Admins
-- System administration accounts
-- Default admin: `admin@oneme.com` / `admin123`
+#### jobs
+- `id` (BIGINT, AUTO_INCREMENT, PRIMARY KEY)
+- `job_title` (VARCHAR, NOT NULL)
+- `description` (TEXT)
+- `service_category` (VARCHAR, NOT NULL)
+- `location` (VARCHAR)
+- `budget_min` (DOUBLE)
+- `budget_max` (DOUBLE)
+- `status` (VARCHAR, DEFAULT 'pending')
+- `user_id` (VARCHAR)
+- `assigned_vendor` (VARCHAR)
+- `created_at` (DATETIME)
+- `updated_at` (DATETIME)
+
+#### admins
+- `id` (BIGINT, AUTO_INCREMENT, PRIMARY KEY)
+- `name` (VARCHAR, NOT NULL)
+- `email` (VARCHAR, UNIQUE, NOT NULL)
+- `password` (VARCHAR, NOT NULL)
+
+#### Collection Tables
+- `user_jobs` - User's posted jobs
+- `vendor_service_categories` - Vendor's service categories
+- `vendor_team_members` - Vendor's team members
+- `vendor_jobs` - Vendor's accepted jobs
+
+### Default Admin
+- Email: `admin@oneme.com`
+- Password: `admin123`
 
 ## 🔒 Security Features
 
@@ -150,6 +202,8 @@ The backend will start on `http://localhost:8083`
 - Role-based access control
 - File upload validation
 - CORS configuration
+- JPA/Hibernate ORM security
+- MySQL prepared statements
 
 ## 📁 Project Structure
 
@@ -164,9 +218,8 @@ src/main/java/com/vendrconnect/
 ├── service/        # Business logic
 └── util/           # Utility classes
 
-data/
-├── mongodb/        # Persistent database files
-└── mongodb-binaries/ # MongoDB binaries cache
+# MySQL database connection
+# Tables auto-created by Hibernate DDL
 
 uploads/
 └── profile-images/ # User profile images
@@ -197,9 +250,11 @@ java -jar target/vendrconnect-backend-1.0.0.jar
 ### Common Issues
 
 1. **Port Conflicts**: Backend runs on port 8083
-2. **MongoDB Issues**: Uses embedded MongoDB with persistent storage
-3. **Google OAuth**: Ensure correct client ID and origins
-4. **File Uploads**: Check directory permissions for `uploads/`
+2. **MySQL Connection**: Ensure MySQL is running and credentials are correct
+3. **Database Creation**: Make sure `vendor_connect` database exists
+4. **Google OAuth**: Ensure correct client ID and origins
+5. **File Uploads**: Check directory permissions for `uploads/`
+6. **Hibernate DDL**: Tables are auto-created on first run
 
 ### Logs
 ```bash

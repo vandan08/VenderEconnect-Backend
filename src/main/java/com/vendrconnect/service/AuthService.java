@@ -40,8 +40,8 @@ public class AuthService {
                            passwordEncoder.encode(request.getPassword()), request.getLocation());
         user = userRepository.save(user);
         
-        String token = jwtUtils.generateJwtToken(user.getId(), user.getEmail(), "USER");
-        return new AuthResponse(token, user.getId(), user.getName(), user.getEmail(), "USER");
+        String token = jwtUtils.generateJwtToken(user.getId().toString(), user.getEmail(), "USER");
+        return new AuthResponse(token, user.getId().toString(), user.getName(), user.getEmail(), "USER");
     }
     
     public AuthResponse registerVendor(VendorRegistrationRequest request) {
@@ -50,13 +50,16 @@ public class AuthService {
             throw new RuntimeException("Email already exists");
         }
         
-        Vendor vendor = new Vendor(request.getName(), request.getEmail(), 
-                                 passwordEncoder.encode(request.getPassword()), 
-                                 request.getServiceCategories(), request.getLocation());
+        Vendor vendor = new Vendor();
+        vendor.setName(request.getName());
+        vendor.setEmail(request.getEmail());
+        vendor.setPassword(passwordEncoder.encode(request.getPassword()));
+        vendor.setLocation(request.getLocation());
+        vendor.setServiceCategories(request.getServiceCategories());
         vendor = vendorRepository.save(vendor);
         
-        String token = jwtUtils.generateJwtToken(vendor.getId(), vendor.getEmail(), "VENDOR");
-        return new AuthResponse(token, vendor.getId(), vendor.getName(), vendor.getEmail(), "VENDOR");
+        String token = jwtUtils.generateJwtToken(vendor.getId().toString(), vendor.getEmail(), "VENDOR");
+        return new AuthResponse(token, vendor.getId().toString(), vendor.getName(), vendor.getEmail(), "VENDOR");
     }
     
     public AuthResponse loginUser(LoginRequest request) {
@@ -64,8 +67,8 @@ public class AuthService {
                 .orElse(null);
         
         if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            String token = jwtUtils.generateJwtToken(user.getId(), user.getEmail(), "USER");
-            return new AuthResponse(token, user.getId(), user.getName(), user.getEmail(), "USER");
+            String token = jwtUtils.generateJwtToken(user.getId().toString(), user.getEmail(), "USER");
+            return new AuthResponse(token, user.getId().toString(), user.getName(), user.getEmail(), "USER");
         }
         
         throw new RuntimeException("Invalid credentials");
@@ -76,8 +79,8 @@ public class AuthService {
                 .orElse(null);
         
         if (vendor != null && passwordEncoder.matches(request.getPassword(), vendor.getPassword())) {
-            String token = jwtUtils.generateJwtToken(vendor.getId(), vendor.getEmail(), "VENDOR");
-            return new AuthResponse(token, vendor.getId(), vendor.getName(), vendor.getEmail(), "VENDOR");
+            String token = jwtUtils.generateJwtToken(vendor.getId().toString(), vendor.getEmail(), "VENDOR");
+            return new AuthResponse(token, vendor.getId().toString(), vendor.getName(), vendor.getEmail(), "VENDOR");
         }
         
         throw new RuntimeException("Invalid credentials");
@@ -88,8 +91,8 @@ public class AuthService {
                 .orElse(null);
         
         if (admin != null && passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
-            String token = jwtUtils.generateJwtToken(admin.getId(), admin.getEmail(), "ADMIN");
-            return new AuthResponse(token, admin.getId(), admin.getName(), admin.getEmail(), "ADMIN");
+            String token = jwtUtils.generateJwtToken(admin.getId().toString(), admin.getEmail(), "ADMIN");
+            return new AuthResponse(token, admin.getId().toString(), admin.getName(), admin.getEmail(), "ADMIN");
         }
         
         throw new RuntimeException("Invalid credentials");
@@ -104,12 +107,12 @@ public class AuthService {
     }
     
     public User getUserById(String userId) {
-        return userRepository.findById(userId)
+        return userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
     
     public Vendor getVendorById(String vendorId) {
-        return vendorRepository.findById(vendorId)
+        return vendorRepository.findById(Long.parseLong(vendorId))
                 .orElseThrow(() -> new RuntimeException("Vendor not found"));
     }
     

@@ -13,36 +13,24 @@ public class VendorService {
     private VendorRepository vendorRepository;
     
     public Vendor getVendorById(String vendorId) {
-        return vendorRepository.findById(vendorId).orElseThrow();
+        return vendorRepository.findById(Long.parseLong(vendorId)).orElseThrow();
     }
     
-    public Vendor updateAvailabilityStatus(String vendorId, String status) {
-        Vendor vendor = vendorRepository.findById(vendorId).orElseThrow();
-        vendor.setAvailabilityStatus(status);
+    public Vendor updateAvailabilityStatus(String vendorId, boolean isAvailable) {
+        Vendor vendor = vendorRepository.findById(Long.parseLong(vendorId)).orElseThrow();
+        vendor.setAvailable(isAvailable);
         return vendorRepository.save(vendor);
     }
     
-    public Vendor addTeamMember(String vendorId, TeamMember teamMember) {
-        Vendor vendor = vendorRepository.findById(vendorId).orElseThrow();
-        vendor.getTeamMembers().add(teamMember);
+    public Vendor addTeamMember(String vendorId, String memberName) {
+        Vendor vendor = vendorRepository.findById(Long.parseLong(vendorId)).orElseThrow();
+        vendor.getTeamMembers().add(memberName);
         return vendorRepository.save(vendor);
     }
     
     public Vendor removeTeamMember(String vendorId, String memberName) {
-        Vendor vendor = vendorRepository.findById(vendorId).orElseThrow();
-        vendor.getTeamMembers().removeIf(member -> member.getName().equals(memberName));
-        return vendorRepository.save(vendor);
-    }
-    
-    public Vendor updateTeamMember(String vendorId, String memberName, TeamMember updatedMember) {
-        Vendor vendor = vendorRepository.findById(vendorId).orElseThrow();
-        vendor.getTeamMembers().stream()
-            .filter(member -> member.getName().equals(memberName))
-            .findFirst()
-            .ifPresent(member -> {
-                member.setRole(updatedMember.getRole());
-                member.setStatus(updatedMember.getStatus());
-            });
+        Vendor vendor = vendorRepository.findById(Long.parseLong(vendorId)).orElseThrow();
+        vendor.getTeamMembers().remove(memberName);
         return vendorRepository.save(vendor);
     }
 }

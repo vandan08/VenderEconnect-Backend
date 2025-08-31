@@ -1,40 +1,60 @@
 package com.vendrconnect.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "jobs")
+@Entity
+@Table(name = "jobs")
 public class Job {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
+    @NotBlank
     private String jobTitle;
+    
+    @Column(columnDefinition = "TEXT")
     private String description;
-    private String location;
-    private String postedBy;
-    private String status = "pending";
-    private String assignedVendor;
-    private String assignedTeamMember;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    
+    @NotBlank
     private String serviceCategory;
+    
+    private String location;
     private Double budgetMin;
     private Double budgetMax;
+    private String status = "pending";
+    private String userId;
+    private String assignedVendor;
+    
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+    
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     public Job() {}
 
-    public Job(String jobTitle, String description, String location, String postedBy, String serviceCategory) {
+    public Job(String jobTitle, String description, String serviceCategory, String location, 
+               Double budgetMin, Double budgetMax, String userId) {
         this.jobTitle = jobTitle;
         this.description = description;
-        this.location = location;
-        this.postedBy = postedBy;
         this.serviceCategory = serviceCategory;
+        this.location = location;
+        this.budgetMin = budgetMin;
+        this.budgetMax = budgetMax;
+        this.userId = userId;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 
     // Getters and Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getJobTitle() { return jobTitle; }
     public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
@@ -42,30 +62,30 @@ public class Job {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-
-    public String getPostedBy() { return postedBy; }
-    public void setPostedBy(String postedBy) { this.postedBy = postedBy; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
-    public String getAssignedVendor() { return assignedVendor; }
-    public void setAssignedVendor(String assignedVendor) { this.assignedVendor = assignedVendor; }
-
-    public String getAssignedTeamMember() { return assignedTeamMember; }
-    public void setAssignedTeamMember(String assignedTeamMember) { this.assignedTeamMember = assignedTeamMember; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
     public String getServiceCategory() { return serviceCategory; }
     public void setServiceCategory(String serviceCategory) { this.serviceCategory = serviceCategory; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
     public Double getBudgetMin() { return budgetMin; }
     public void setBudgetMin(Double budgetMin) { this.budgetMin = budgetMin; }
 
     public Double getBudgetMax() { return budgetMax; }
     public void setBudgetMax(Double budgetMax) { this.budgetMax = budgetMax; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+
+    public String getAssignedVendor() { return assignedVendor; }
+    public void setAssignedVendor(String assignedVendor) { this.assignedVendor = assignedVendor; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

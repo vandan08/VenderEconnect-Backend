@@ -26,19 +26,20 @@ public class VendorController {
     }
     
     @PutMapping("/availability")
-    public ResponseEntity<Vendor> updateAvailability(@RequestBody Map<String, String> request, 
+    public ResponseEntity<Vendor> updateAvailability(@RequestBody Map<String, Boolean> request, 
                                                      Authentication auth) {
         String vendorId = auth.getName();
-        String status = request.get("status");
-        Vendor vendor = vendorService.updateAvailabilityStatus(vendorId, status);
+        Boolean isAvailable = request.get("isAvailable");
+        Vendor vendor = vendorService.updateAvailabilityStatus(vendorId, isAvailable);
         return ResponseEntity.ok(vendor);
     }
     
     @PostMapping("/team")
-    public ResponseEntity<Vendor> addTeamMember(@RequestBody TeamMember teamMember, 
+    public ResponseEntity<Vendor> addTeamMember(@RequestBody Map<String, String> request, 
                                                Authentication auth) {
         String vendorId = auth.getName();
-        Vendor vendor = vendorService.addTeamMember(vendorId, teamMember);
+        String memberName = request.get("name");
+        Vendor vendor = vendorService.addTeamMember(vendorId, memberName);
         return ResponseEntity.ok(vendor);
     }
     
@@ -47,15 +48,6 @@ public class VendorController {
                                                   Authentication auth) {
         String vendorId = auth.getName();
         Vendor vendor = vendorService.removeTeamMember(vendorId, memberName);
-        return ResponseEntity.ok(vendor);
-    }
-    
-    @PutMapping("/team/{memberName}")
-    public ResponseEntity<Vendor> updateTeamMember(@PathVariable String memberName, 
-                                                  @RequestBody TeamMember teamMember,
-                                                  Authentication auth) {
-        String vendorId = auth.getName();
-        Vendor vendor = vendorService.updateTeamMember(vendorId, memberName, teamMember);
         return ResponseEntity.ok(vendor);
     }
 }

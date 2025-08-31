@@ -61,7 +61,7 @@ public class AdminController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String id) {
         try {
-            userRepository.deleteById(id);
+            userRepository.deleteById(Long.parseLong(id));
             return ResponseEntity.ok(Map.of("message", "User deleted successfully"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", "Failed to delete user"));
@@ -71,7 +71,7 @@ public class AdminController {
     @DeleteMapping("/vendors/{id}")
     public ResponseEntity<Map<String, String>> deleteVendor(@PathVariable String id) {
         try {
-            vendorRepository.deleteById(id);
+            vendorRepository.deleteById(Long.parseLong(id));
             return ResponseEntity.ok(Map.of("message", "Vendor deleted successfully"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", "Failed to delete vendor"));

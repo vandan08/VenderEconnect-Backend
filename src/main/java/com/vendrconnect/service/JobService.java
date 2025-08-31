@@ -21,25 +21,21 @@ public class JobService {
     
     public Job createJob(JobRequest request, String userId) {
         Job job = new Job(request.getJobTitle(), request.getDescription(), 
-                         request.getLocation(), userId, request.getServiceCategory());
-        if (request.getBudgetMin() != null) {
-            job.setBudgetMin(request.getBudgetMin());
-        }
-        if (request.getBudgetMax() != null) {
-            job.setBudgetMax(request.getBudgetMax());
-        }
+                         request.getServiceCategory(), request.getLocation(), 
+                         request.getBudgetMin(), request.getBudgetMax(), userId);
+
         job = jobRepository.save(job);
         
         // Add job to user's posted jobs list
-        User user = userRepository.findById(userId).orElseThrow();
-        user.getJobsPosted().add(job.getId());
+        User user = userRepository.findById(Long.parseLong(userId)).orElseThrow();
+        user.getJobsPosted().add(job.getId().toString());
         userRepository.save(user);
         
         return job;
     }
     
     public List<Job> getUserJobs(String userId) {
-        return jobRepository.findByPostedBy(userId);
+        return jobRepository.findByUserId(userId);
     }
     
     public List<Job> getVendorJobs(String vendorId) {
@@ -47,15 +43,17 @@ public class JobService {
     }
     
     public List<Job> getAvailableJobsForVendor(String serviceCategory, String location) {
-        List<Job> jobs = jobRepository.findByServiceCategoryAndLocationAndStatus(serviceCategory, location, "pending");
-        if (jobs.isEmpty()) {
-            jobs = jobRepository.findByServiceCategoryAndStatus(serviceCategory, "pending");
+        List<Job> jobs;
+        if (location != null && !location.isEmpty()) {
+            jobs = jobRepository.findAvailableJobsByCategoryAndLocation(serviceCategory, location);
+        } else {
+            jobs = jobRepository.findAvailableJobsByCategory(serviceCategory);
         }
         return jobs;
     }
     
     public Job acceptJob(String jobId, String vendorId) {
-        Job job = jobRepository.findById(jobId)
+        Job job = jobRepository.findById(Long.parseLong(jobId))
             .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
         job.setStatus("in_progress");
         job.setAssignedVendor(vendorId);
@@ -63,14 +61,14 @@ public class JobService {
     }
     
     public Job updateJobStatus(String jobId, String status) {
-        Job job = jobRepository.findById(jobId)
+        Job job = jobRepository.findById(Long.parseLong(jobId))
             .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
         job.setStatus(status);
         return jobRepository.save(job);
     }
     
     public Job getJobById(String jobId) {
-        return jobRepository.findById(jobId)
+        return jobRepository.findById(Long.parseLong(jobId))
             .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
     }
     
