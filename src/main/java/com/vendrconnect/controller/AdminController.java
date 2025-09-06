@@ -28,6 +28,9 @@ public class AdminController {
     @Autowired
     private JobRepository jobRepository;
     
+    @Autowired
+    private com.vendrconnect.service.JobService jobService;
+    
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -45,8 +48,8 @@ public class AdminController {
     }
     
     @GetMapping("/jobs")
-    public ResponseEntity<List<Job>> getAllJobs() {
-        return ResponseEntity.ok(jobRepository.findAll());
+    public ResponseEntity<List<com.vendrconnect.dto.JobResponseDto>> getAllJobs() {
+        return ResponseEntity.ok(jobService.getAllJobsWithDetails());
     }
     
     @GetMapping("/stats")

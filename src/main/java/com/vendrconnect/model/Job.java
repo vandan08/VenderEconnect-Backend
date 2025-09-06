@@ -25,6 +25,7 @@ public class Job {
     private Double budgetMin;
     private Double budgetMax;
     private String status = "pending";
+    private String urgency = "normal";
     private String userId;
     private String assignedVendor;
     
@@ -33,6 +34,9 @@ public class Job {
     
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+    
+    @Column(name = "urgency")
+    private String urgency = "normal";
 
     public Job() {}
 
@@ -45,6 +49,7 @@ public class Job {
         this.budgetMin = budgetMin;
         this.budgetMax = budgetMax;
         this.userId = userId;
+        this.urgency = "normal";
     }
 
     @PreUpdate
@@ -88,4 +93,7 @@ public class Job {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public String getUrgency() { return urgency; }
+    public void setUrgency(String urgency) { this.urgency = urgency; }
 }

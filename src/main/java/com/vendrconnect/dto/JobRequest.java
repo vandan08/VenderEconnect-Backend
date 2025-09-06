@@ -17,6 +17,7 @@ public class JobRequest {
     
     private Double budgetMin;
     private Double budgetMax;
+    private String urgency;
 
     public String getJobTitle() { return jobTitle; }
     public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
@@ -35,4 +36,7 @@ public class JobRequest {
 
     public Double getBudgetMax() { return budgetMax; }
     public void setBudgetMax(Double budgetMax) { this.budgetMax = budgetMax; }
+
+    public String getUrgency() { return urgency; }
+    public void setUrgency(String urgency) { this.urgency = urgency; }
 }
