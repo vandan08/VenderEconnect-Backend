@@ -25,7 +25,6 @@ public class Job {
     private Double budgetMin;
     private Double budgetMax;
     private String status = "pending";
-    private String urgency = "normal";
     private String userId;
     private String assignedVendor;
     
