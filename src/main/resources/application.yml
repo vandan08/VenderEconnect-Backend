@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/vendor_connect
-    username: root
-    password: password
+    url: ${DB_URL:jdbc:mysql://localhost:3306/vendor_connect}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -22,7 +22,7 @@ spring:
 
 
 server:
-  port: 8083
+  port: ${SERVER_PORT:8083}
 
 jwt:
   secret: VendrConnectSecretKey2024!@#$%^&*()
@@ -35,16 +35,16 @@ logging:
 # Google OAuth Configuration
 google:
   oauth:
-    client-id: 968790597541-a4ukmkd56rjan720jqnhn8r32tgup6ru.apps.googleusercontent.com
-    client-secret: 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
+    client-id: ${GOOGLE_CLIENT_ID}
+    client-secret: ${GOOGLE_CLIENT_SECRET}
 
 # Chatbot Configuration
 chatbot:
   gemini:
-    api-key: AIzaSyCCFJGdwyalxRdwqEnVEFbAD7bVaL-YS5g
-    model: gemini-2.5-pro
-    max-tokens: 150
-    temperature: 0.7
+    api-key: ${GEMINI_API_KEY}
+    model: ${GEMINI_MODEL:gemini-2.5-pro}
+    max-tokens: ${GEMINI_MAX_TOKENS:150}
+    temperature: ${GEMINI_TEMPERATURE:0.7}
   websocket:
     endpoint: /ws/chat
-    allowed-origins: http://localhost:5173
+    allowed-origins: ${WEBSOCKET_ALLOWED_ORIGINS:http://localhost:5173}
