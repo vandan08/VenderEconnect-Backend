@@ -1,8 +1,8 @@
-# OneMe Backend
+# VenderConnect Backend
 
 **"Everything You Need, All in One Place"**
 
-OneMe is a comprehensive service marketplace backend that connects users with vendors for various services. Built with Spring Boot and MongoDB, it provides secure authentication, job management, and profile handling.
+VenderConnect is a comprehensive service marketplace backend that connects users with vendors for various services. Built with Spring Boot and MongoDB, it provides secure authentication, job management, and profile handling.
 
 ## 🚀 Features
 
@@ -86,7 +86,7 @@ jwt:
 ### 1. Clone and Setup
 ```bash
 git clone <repository-url>
-cd VenderEconnect-Backend
+cd VenderConnect-Backend
 ```
 
 ### 2. Database Setup
@@ -191,7 +191,7 @@ The backend will start on `http://localhost:8083`
 - `vendor_jobs` - Vendor's accepted jobs
 
 ### Default Admin
-- Email: `admin@oneme.com`
+- Email: `admin@vendrconnect.com`
 - Password: `admin123`
 
 ## 🔒 Security Features
@@ -285,4 +285,4 @@ For support and questions:
 
 ---
 
-**OneMe Backend** - Powering the unified service marketplace platform.
+**VenderConnect Backend** - Powering the unified service marketplace platform.
