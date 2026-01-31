@@ -36,8 +36,17 @@ public class AuthService {
             throw new RuntimeException("Email already exists");
         }
         
+        String password = request.getPassword();
+        if (password == null || password.trim().isEmpty()) {
+            throw new RuntimeException("Password is required for registration");
+        }
+        
+        if (password.length() < 6) {
+            throw new RuntimeException("Password must be at least 6 characters long");
+        }
+        
         User user = new User(request.getName(), request.getEmail(), 
-                           passwordEncoder.encode(request.getPassword()), request.getLocation());
+                           passwordEncoder.encode(password), request.getLocation());
         user = userRepository.save(user);
         
         String token = jwtUtils.generateJwtToken(user.getId().toString(), user.getEmail(), "USER");
@@ -50,10 +59,19 @@ public class AuthService {
             throw new RuntimeException("Email already exists");
         }
         
+        String password = request.getPassword();
+        if (password == null || password.trim().isEmpty()) {
+            throw new RuntimeException("Password is required for registration");
+        }
+        
+        if (password.length() < 6) {
+            throw new RuntimeException("Password must be at least 6 characters long");
+        }
+        
         Vendor vendor = new Vendor();
         vendor.setName(request.getName());
         vendor.setEmail(request.getEmail());
-        vendor.setPassword(passwordEncoder.encode(request.getPassword()));
+        vendor.setPassword(passwordEncoder.encode(password));
         vendor.setLocation(request.getLocation());
         vendor.setServiceCategories(request.getServiceCategories());
         vendor = vendorRepository.save(vendor);

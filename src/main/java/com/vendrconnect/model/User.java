@@ -22,7 +22,6 @@ public class User {
     @Column(unique = true)
     private String email;
     
-    @NotBlank
     private String password;
     
     private String location;

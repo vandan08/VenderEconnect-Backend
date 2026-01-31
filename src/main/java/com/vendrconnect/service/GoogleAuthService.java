@@ -65,7 +65,7 @@ public class GoogleAuthService {
             user = new User();
             user.setName(name);
             user.setEmail(email);
-            user.setPassword(""); // No password for Google auth
+            user.setPassword(null); // No password for Google OAuth users
             user.setLocation(""); // Can be updated later
             user = userRepository.save(user);
         }
@@ -84,7 +84,7 @@ public class GoogleAuthService {
             vendor = new Vendor();
             vendor.setName(name);
             vendor.setEmail(email);
-            vendor.setPassword(""); // No password for Google auth
+            vendor.setPassword(null); // No password for Google OAuth users
             vendor.setLocation(""); // Can be updated later
             if (serviceCategories != null) {
                 vendor.setServiceCategories(Arrays.asList(serviceCategories));
